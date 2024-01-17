@@ -1,5 +1,6 @@
 import Button from "../components/common/Button";
 import GHOToken from "../assets/svg/GHO_Token.svg";
+import Header from "../components/layout/Header";
 
 const HomePage = () => {
   const handleButtonClick = () => {
@@ -7,8 +8,9 @@ const HomePage = () => {
   };
 
   return (
-    <div className="container mx-auto text-center">
-      <h1 className="text-6xl font-bold my-6 font-uni-neue-black text-white">
+    <div className="mx-auto text-center">
+      <Header />
+      <h1 className="text-6xl font-bold my-8 font-uni-neue-black text-white">
         Welcome to <span className="font-uni-neue-light">loGHO</span>
       </h1>
       <div className="pt-4 pb-40 text-gho-dark-primary">
