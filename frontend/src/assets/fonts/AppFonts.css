@@ -1,0 +1,39 @@
+@font-face {
+    font-family: 'Geospeed';
+    src: url('./GEOspeed-FFP-numbers.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+  }
+  .font-geospeed {
+    font-family: 'Geospeed';
+  }
+
+@font-face {
+  font-family: 'UniNeueBlack';
+  src: url('./UniNeue-Trial-Black.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+.font-uni-neue-black {
+  font-family: 'UniNeueBlack';
+}
+
+@font-face {
+  font-family: 'UniNeueHeavy';
+  src: url('./UniNeue-Trial-Heavy.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+.font-uni-neue-heavy {
+  font-family: 'UniNeueHeavy';
+}
+
+@font-face {
+  font-family: 'UniNeueLight';
+  src: url(./UniNeue-Trial-Light.ttf) format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+.font-uni-neue-light {
+  font-family: 'UniNeueLight';
+}
