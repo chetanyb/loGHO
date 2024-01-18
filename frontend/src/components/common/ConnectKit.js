@@ -1,4 +1,4 @@
-import { WagmiConfig, createConfig } from "wagmi";
+import { WagmiConfig, createConfig, mainnet, sepolia } from "wagmi";
 import {
   ConnectKitProvider,
   ConnectKitButton,
@@ -9,8 +9,8 @@ const config = createConfig(
   getDefaultConfig({
     infuraId: process.env.INFURA_ID,
     walletConnectProjectId: process.env.WALLETCONNECT_PROJECT_ID,
-
     appName: "loGHO",
+    chains: [mainnet, sepolia],
 
     // Optional
     appDescription: "GHO onramp",

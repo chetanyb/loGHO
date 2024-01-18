@@ -10,7 +10,9 @@ const Header = () => {
         </div>
         <nav>
           <ul className="flex space-x-4">
-            <li>Home</li>
+            <li>
+              <a href="/">Home</a>
+            </li>
             <li>About</li>
             <li>
               <FamilyWallet />

@@ -1,10 +1,13 @@
 import Button from "../components/common/Button";
 import GHOToken from "../assets/svg/GHO_Token.svg";
 import Header from "../components/layout/Header";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
+  const navigate = useNavigate();
+
   const handleButtonClick = () => {
-    console.log("Button clicked!");
+    navigate('/getgho');
   };
 
   return (
