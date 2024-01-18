@@ -1,17 +1,15 @@
 import { ethers } from "hardhat";
 import { expect } from "chai";
-import { CustomVault } from "../typechain"; // Adjust the path according to your project structure
-import { ERC20 } from "../typechain"; // Adjust if necessary
 
 describe("CustomVault", function () {
   let customVault: CustomVault;
-  let mockERC20: ERC20;
+  let mockERC20;
   let owner: SignerWithAddress, user1: SignerWithAddress;
 
   beforeEach(async function () {
     // Deploy Mock ERC20 token
-    const MockERC20 = await ethers.getContractFactory("MockERC20");
-    mockERC20 = await MockERC20.deploy("MockToken", "MTK");
+    const _mockERC20 = await ethers.getContractFactory("USDC");
+    mockERC20 = await _mockERC20.deploy("MockToken", "MTK");
 
     // Deploy CustomVault
     const CustomVault = await ethers.getContractFactory("CustomVault");
