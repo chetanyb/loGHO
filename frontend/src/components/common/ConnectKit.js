@@ -1,16 +1,17 @@
-import { WagmiConfig, createConfig, mainnet, sepolia } from "wagmi";
+import { WagmiConfig, createConfig } from "wagmi";
 import {
   ConnectKitProvider,
   ConnectKitButton,
   getDefaultConfig,
 } from "connectkit";
+import { goerli } from "viem/chains";
 
 const config = createConfig(
   getDefaultConfig({
-    infuraId: process.env.INFURA_ID,
-    walletConnectProjectId: process.env.WALLETCONNECT_PROJECT_ID,
+    infuraId: process.env.REACT_APP_INFURA_ID,
+    walletConnectProjectId: process.env.REACT_APP_WALLETCONNECT_PROJECT_ID,
     appName: "loGHO",
-    chains: [mainnet, sepolia],
+    chains: [goerli],
 
     // Optional
     appDescription: "GHO onramp",

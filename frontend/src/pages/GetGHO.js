@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Header from "../components/layout/Header";
+import Balance from "../components/specific/Monerium";
 
 const GetGHO = () => {
   const [amount, setAmount] = useState(0);
@@ -37,6 +38,7 @@ const GetGHO = () => {
             onChange={handleAmountChange}
             placeholder="Enter amount"
           />
+          <Balance /> {/* Render the MoneriumBalance component */}
           <p className="block text-sm font-medium text-gray-700 pt-4">
             Transaction terms
           </p>
