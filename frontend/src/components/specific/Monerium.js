@@ -12,28 +12,25 @@ const Balance = () => {
           clientId: process.env.REACT_APP_MONERIUM_CLIENT_ID,
           clientSecret: process.env.REACT_APP_MONERIUM_CLIENT_SECRET,
         });
-
-        await monerium.getAccess();
-
         // Get all profiles for the authenticated user
         const authCtx = await monerium.getAuthContext();
 
         // Fetching all accounts for a specific profile
-        const { id: profileId } = await monerium.getProfile(authCtx.profiles[0].id);
-
+        const { id: profileId } = await monerium.getProfile(
+          authCtx.profiles[0].id
+        );
         // Fetching all balances for a specific profile
         const { balances } = await monerium.getBalances(profileId);
 
-        // Assuming that the balance for the first account is what you need
-        // Update this logic based on how you want to handle multiple accounts
         if (balances && balances.length > 0) {
           setBalance(balances[0].balance);
         } else {
-          setBalance('No balance available');
+          setBalance("No balance available");
         }
       } catch (error) {
-        console.error('Error fetching balance:', error);
-        setBalance('Error fetching balance');
+        console.error("Error fetching balance:", error);
+        //setBalance("Error fetching balance");
+        setBalance(error.message);
       }
     };
 

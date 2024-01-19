@@ -1,18 +1,16 @@
 import Button from "../components/common/Button";
 import GHOToken from "../assets/svg/GHO_Token.svg";
-import Header from "../components/layout/Header";
 import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
-    navigate('/getgho');
+    navigate("/getgho");
   };
 
   return (
     <div className="mx-auto text-center">
-      <Header />
       <h1 className="text-6xl font-bold my-8 font-uni-neue-black text-white">
         Welcome to <span className="font-uni-neue-light">loGHO</span>
       </h1>

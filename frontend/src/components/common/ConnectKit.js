@@ -30,4 +30,5 @@ const FamilyWallet = () => {
   );
 };
 
+export { config };
 export default FamilyWallet;
