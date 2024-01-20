@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
-import Balance from "../components/specific/Monerium";
+import { Monerium } from "../components/specific/Monerium.tsx";
 import USDeData from "../assets/abi/USDe.json";
 
 const GetGHO = () => {
@@ -59,7 +59,9 @@ const GetGHO = () => {
   }, [amount, tokenBalance]);
 
   return (
-    <div className="">
+    <div>
+      <Monerium />
+
       <div className="container borrow-form bg-white p-4 rounded-md shadow-md mx-auto my-12 sm:w-1/2 md:w-1/3 lg:w-1/3">
         <form className="flex flex-col space-y-4">
           <h1 className=" text-xl font-extrabold text-black">Borrow GHO</h1>
@@ -86,8 +88,7 @@ const GetGHO = () => {
             value={amount}
             onChange={handleAmountChange}
           />
-          <p>USDe Balance: {tokenBalance}</p> {/* Display the token balance */}
-          <Balance /> {/* Render the MoneriumBalance component */}
+          <p>USDe Balance: {tokenBalance}</p>
           <p className="block text-sm font-medium text-gray-700 pt-4">
             Transaction terms
           </p>

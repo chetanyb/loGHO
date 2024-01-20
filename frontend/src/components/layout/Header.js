@@ -13,7 +13,9 @@ const Header = () => {
             <li>
               <a href="/">Home</a>
             </li>
-            <li>About</li>
+            <li>
+              <a href="/dashboard">Dashboard</a>
+            </li>
             <li>
               <FamilyWallet />
             </li>
