@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import USDeData from "../assets/abi/USDe.json";
+import EUReData from "../assets/abi/EURe.json";
+import GBPeData from "../assets/abi/GBPe.json";
+import USDCData from "../assets/abi/USDC.json";
 import Wallet from "../assets/images/wallet.png";
 import Bar from "../assets/images/bar-chart.png";
 import Fee from "../assets/images/fee.png";
@@ -13,6 +16,123 @@ import USDT from "../assets/svg/USDT.svg";
 import GHO from "../assets/svg/GHO_Token.svg";
 
 const Dashboard = () => {
+  const { address } = useAccount();
+
+  const [USDeBalance, setUSDeBalance] = useState(0);
+  const [EUReBalance, setEUReBalance] = useState(0);
+  const [GBPeBalance, setGBPeBalance] = useState(0);
+  const [USDCBalance, setUSDCBalance] = useState(0);
+  const [USDTBalance, setUSDTBalance] = useState(0);
+  const [GHOBalance, setGHOBalance] = useState(0);
+  const [totalBalance, setTotalBalance] = useState(0);
+  const [EUReExchangeRate, setEUReExchangeRate] = useState(0);
+  const [GBPeExchangeRate, setGBPeExchangeRate] = useState(0);
+
+  const fetchUSDeBalance = async () => {
+    if (!address) return;
+    const USDeAddress = "0x1b55D077b3459e73354bA2C338425B3A3079fC0f";
+    const USDeABI = JSON.parse(USDeData.result);
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const contract = new ethers.Contract(USDeAddress, USDeABI, provider);
+
+    try {
+      const USDeBalance = await contract.balanceOf(address);
+      setUSDeBalance(ethers.utils.formatEther(USDeBalance));
+    } catch (error) {
+      console.error("Error fetching token balance:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUSDeBalance();
+  }, [address]);
+
+  const fetchEUReBalance = async () => {
+    if (!address) return;
+    const EUReAddress = "0x83B844180f66Bbc3BE2E97C6179035AF91c4Cce8";
+    const EUReABI = JSON.parse(EUReData.result);
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const contract = new ethers.Contract(EUReAddress, EUReABI, provider);
+
+    try {
+      const EUReBalance = await contract.balanceOf(address);
+      setEUReBalance(ethers.utils.formatEther(EUReBalance));
+    } catch (error) {
+      console.error("Error fetching token balance:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEUReBalance();
+  }, [address]);
+
+  const fetchGBPeBalance = async () => {
+    if (!address) return;
+    const GBPeAddress = "0x687b68644d0b4e3EC9a24FEc4767FCC5854b9572";
+    const GBPeABI = JSON.parse(GBPeData.result);
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const contract = new ethers.Contract(GBPeAddress, GBPeABI, provider);
+
+    try {
+      const GBPeBalance = await contract.balanceOf(address);
+      setGBPeBalance(ethers.utils.formatEther(GBPeBalance));
+    } catch (error) {
+      console.error("Error fetching token balance:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchGBPeBalance();
+  }, [address]);
+
+  const fetchUSDCBalance = async () => {
+    if (!address) return;
+    const USDCAddress = "0x07865c6E87B9F70255377e024ace6630C1Eaa37F";
+    const USDCABI = JSON.parse(USDCData.result);
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const contract = new ethers.Contract(USDCAddress, USDCABI, provider);
+
+    try {
+      const USDCBalance = await contract.balanceOf(address);
+      setUSDCBalance(ethers.utils.formatEther(USDCBalance));
+    } catch (error) {
+      console.error("Error fetching token balance:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUSDCBalance();
+  }, [address]);
+
+  const calculateTotalBalance = () => {
+    const totalBalance =
+      Number(USDeBalance) +
+      Number(EUReBalance) * Number(EUReExchangeRate) +
+      Number(GBPeBalance) * Number(GBPeExchangeRate) +
+      Number(USDCBalance); /*+ Number(GHOBalance) + Number(USDTBalance)*/
+    setTotalBalance(totalBalance);
+  };
+
+  useEffect(() => {
+    calculateTotalBalance();
+  }, [USDeBalance, EUReBalance, GBPeBalance, USDCBalance]);
+
+  const fetExchangeRate = async () => {
+    const url = `https://api.forexrateapi.com/v1/latest?api_key=${process.env.REACT_APP_FOREX_RATE_API_KEY}&base=USD&currencies=EUR,GBP`;
+    const response = await fetch(url);
+    const data = await response.json();
+    setEUReExchangeRate(Number(1/data.rates.EUR));
+    setGBPeExchangeRate(Number(1/data.rates.GBP));
+  };
+
+  useEffect(() => {
+    fetExchangeRate();
+  }, []);
+
   return (
     <div>
       <div className="flex flex-col">
@@ -28,7 +148,9 @@ const Dashboard = () => {
               <p className="text-slate-200 font-uni-neue-light text-sm">
                 Total Balance<span className="font-sans">≈</span>
               </p>
-              <p className="text-slate-200 text-xl">${5}</p>
+              <p className="text-slate-200 text-xl">
+                ${Number(totalBalance).toFixed(2)}
+              </p>
             </div>
             <div className="flex flex-col justify-between ml-10">
               <div className="rounded-xl border border-slate-400 w-11 h-11 bg-gho-light-primary flex items-center justify-center">
@@ -71,9 +193,9 @@ const Dashboard = () => {
                       <img src={USDe} alt="USDe" className="w-10 h-10 mr-2" />
                       USDe
                     </a>
-                    <p>500</p>
-                    <p>500</p>
-                    <p>500</p>
+                    <p>{Number(USDeBalance).toFixed(2)}</p>
+                    <p>1.0000</p>
+                    <p>Deposit</p>
                   </div>
                 </li>
                 <li className="border-t border-slate-500">
@@ -82,9 +204,9 @@ const Dashboard = () => {
                       <img src={EURe} alt="EURr" className="w-10 h-10 mr-2" />
                       EURe
                     </a>
-                    <p>500</p>
-                    <p>500</p>
-                    <p>500</p>
+                    <p>{Number(EUReBalance).toFixed(2)}</p>
+                    <p>{Number(EUReExchangeRate).toFixed(4)}</p>
+                    <p>Deposit</p>
                   </div>
                 </li>
                 <li className="border-t border-slate-500">
@@ -93,9 +215,9 @@ const Dashboard = () => {
                       <img src={GBPe} alt="GBPe" className="w-10 h-10 mr-2" />
                       GBPe
                     </a>
-                    <p>500</p>
-                    <p>500</p>
-                    <p>500</p>
+                    <p>{Number(GBPeBalance).toFixed(2)}</p>
+                    <p>{Number(GBPeExchangeRate).toFixed(4)}</p>
+                    <p>Deposit</p>
                   </div>
                 </li>
                 <li className="border-t border-slate-500">
@@ -104,20 +226,20 @@ const Dashboard = () => {
                       <img src={USDC} alt="USDC" className="w-10 h-10 mr-2" />
                       USDC
                     </a>
-                    <p>500</p>
-                    <p>500</p>
-                    <p>500</p>
+                    <p>{Number(USDCBalance).toFixed(2)}</p>
+                    <p>1.0000</p>
+                    <p>Deposit</p>
                   </div>
                 </li>
                 <li className="border-t border-slate-500">
-                  <div className="justify-between">
+                  <div className="justify-between -px-10">
                     <a className=" flex items-center">
                       <img src={USDT} alt="USDT" className="w-10 h-10 mr-2" />
                       USDT
                     </a>
-                    <p>500</p>
-                    <p>500</p>
-                    <p>500</p>
+                    <p className="-mx-6">-</p>
+                    <p className="-mx-6">-</p>
+                    <p className="-mx-6">-</p>
                   </div>
                 </li>
               </ul>
