@@ -16,8 +16,8 @@ contract LoGHOFacilitatorTest is DSTest {
     address admin = address(0x2);
 
     function setUp() public {
-        ghoToken = new GhoToken(admin);
-        address ghoTokenAddress = address(ghoToken);
+        // ghoToken = new GhoToken(admin);
+        // address ghoTokenAddress = address(ghoToken);
 
         usde = new MockERC20("USDe", "USDe");
         address usdeAddress = address(usde);
