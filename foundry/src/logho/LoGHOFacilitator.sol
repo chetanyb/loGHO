@@ -12,7 +12,7 @@ contract LoGHOFacilitator is IGhoFacilitator {
     string public label;
     uint128 public bucketCapacity;
     uint256 public constant MAX_FEE = 1e4;
-    uint256 private fee;
+    uint256 public fee;
 
     constructor(address _ghoToken, address _vault, address _ghoTreasury, uint128 _bucketCapacity, uint256 _fee) {
         fee = _fee;
