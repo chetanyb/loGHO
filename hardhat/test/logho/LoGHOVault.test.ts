@@ -1,4 +1,4 @@
-import { setupIntegration } from "../util/ContractUtil";
+import { setupIntegration } from "../util/ContractUtils";
 import { expect } from "chai";
 import hre from "hardhat";
 
@@ -14,13 +14,8 @@ describe("LoGHoVault deposit", function () {
 
   it("It should deposit all e-money tokens", async function () {
     const depositAmount = 10000;
-    const [fromWalletClient, toWalletClient] =
-      await hre.viem.getWalletClients();
-    console.log("fromWalletClient: ", fromWalletClient);
-    console.log("toWalletClient: ", toWalletClient);
-
-    usde.write.mint(fromWalletClient, depositAmount);
-    const balance = await usde.read.balanceOf(toWalletClient.account.address);
+    usde.write.mint(adminAcc, depositAmount);
+    const balance = await usde.read.balanceOf(adminAcc);
     expect(balance).to.equal(depositAmount);
   });
 });
