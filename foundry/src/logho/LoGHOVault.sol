@@ -2,7 +2,6 @@
 
 pragma solidity 0.8.20;
 //"../../lib/openzeppelin-contracts/contracts/token/ERC20/extensions/ERC4626.sol"
-import {ERC4626} from "../../lib/openzeppelin-contracts/contracts/token/ERC20/extensions/";
 import {ERC4626} from '@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol';
 
 contract LoGHOVault is ERC4626 {
