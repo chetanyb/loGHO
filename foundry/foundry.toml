@@ -7,7 +7,7 @@ libs = ["lib"]
 
 
 [profile.dependencies]
-openzeppelin = { git = "https://github.com/OpenZeppelin/openzeppelin-contracts", tag = "v4.5.0" }
+openzeppelin = { git = "https://github.com/OpenZeppelin/openzeppelin-contracts", tag = "v4.7.0" }
 
 remappings = [
     "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts",

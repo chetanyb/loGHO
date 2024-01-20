@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {EnumerableSet} from '@openzeppelin/contracts/utils/structs/EnumerableSet.sol';
-import {AccessControl} from '@openzeppelin/contracts/access/AccessControl.sol';
+import {EnumerableSet} from '../../lib/openzeppelin-contracts/contracts/utils/structs/EnumerableSet.sol';
+import {AccessControl} from '../../lib/openzeppelin-contracts/contracts/access/AccessControl.sol';
 import {ERC20} from './ERC20.sol';
 import {IGhoToken} from './interfaces/IGhoToken.sol';
 
