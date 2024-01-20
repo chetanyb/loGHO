@@ -1,24 +1,25 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.20;
 
-import "./gho/interfaces/IGhoFacilitator.sol";
-import "./gho/GhoToken.sol";
-import "./CustomVault.sol";
+import {IGhoFacilitator} from "../gho/interfaces/IGhoFacilitator.sol";
+import {GhoToken} from "../gho/GhoToken.sol";
+ import {LoGHOVault} from "./LoGHOVault.sol";
 
-contract CustomFacilitator is IGhoFacilitator {
+contract LoGHOFacilitator is IGhoFacilitator {
     address public ghoTreasury;
     GhoToken private ghoToken;
-    CustomVault private vault;
+    LoGHOVault private vault;
     string public label;
     uint128 public bucketCapacity;
     uint256 public constant MAX_FEE = 1e4;
+    uint256 private fee;
 
-    constructor(address _ghoToken, address _vault, address _ghoTreasury, string memory _label, uint128 _bucketCapacity, uint256 fee) {
+    constructor(address _ghoToken, address _vault, address _ghoTreasury, uint128 _bucketCapacity, uint256 _fee) {
+        fee = _fee;
         require(fee <= MAX_FEE, 'FlashMinter: Fee out of range');
         ghoToken = GhoToken(_ghoToken);
-        vault = CustomVault(_vault);
+        vault = LoGHOVault(_vault);
         ghoTreasury = _ghoTreasury;
-        label = _label;
         bucketCapacity = _bucketCapacity;
     }
 
@@ -26,8 +27,8 @@ contract CustomFacilitator is IGhoFacilitator {
 
     function distributeFeesToTreasury() external override {
         uint256 balance = ghoToken.balanceOf(address(this));
-        ghoToken.transfer(_ghoTreasury, balance);
-        emit FeesDistributedToTreasury(_ghoTreasury, address(GHO_TOKEN), balance);
+        ghoToken.transfer(ghoTreasury, balance);
+        emit FeesDistributedToTreasury(ghoTreasury, address(ghoToken), balance);
     }
 
     function updateGhoTreasury(address newGhoTreasury) external override {
@@ -42,14 +43,14 @@ contract CustomFacilitator is IGhoFacilitator {
     }
 
     function mintGho(address to, uint256 amount) public {
-        require(vault.verifyFunds(to, amount), "Insufficient funds in the vault");
+        // require(vault.verifyFunds(to, amount), "Insufficient funds in the vault");
         ghoToken.mint(to, amount);
     }
 
     function _updateFee(uint256 newFee) internal {
             require(newFee <= MAX_FEE, 'FlashMinter: Fee out of range');
-            uint256 oldFee = _fee;
-            _fee = newFee;
+            uint256 oldFee = fee;
+            fee = newFee;
             emit FeeUpdated(oldFee, newFee);
     }
 
