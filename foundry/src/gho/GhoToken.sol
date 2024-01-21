@@ -5,8 +5,6 @@ import {EnumerableSet} from '../../lib/openzeppelin-contracts/contracts/utils/st
 import {AccessControl} from '../../lib/openzeppelin-contracts/contracts/access/AccessControl.sol';
 import {ERC20} from './ERC20.sol';
 import {IGhoToken} from './interfaces/IGhoToken.sol';
-import "forge-std/console.sol";
-
 /**
  * @title GHO Token
  * @author Aave

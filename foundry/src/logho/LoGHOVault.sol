@@ -6,7 +6,6 @@ import {IERC20} from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import {ERC20} from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import {LoGHOFacilitator} from "./LoGHOFacilitator.sol";
 import {LoGHOVaultFee} from "./LoGHOVaultFee.sol";
-import "forge-std/console.sol";
 import {GhoToken} from "../gho/GhoToken.sol";
 
 
@@ -21,17 +20,20 @@ contract LoGHOVault is LoGHOVaultFee {
     GhoToken private ghoToken;
     //loGho contracts
     LoGHOFacilitator private facilitator;
-    
+    uint256 public redeemFee;
+
     //Monerium e-money token contracts
     IERC20 private USDe;
     IERC20 private _asset;
+
+    // address public ghoTreasury;
 
     constructor(IERC20 _asset,
         address _ghoTreasury,
         address _USDe,
         uint256 _redeemFee,
         address ghoTokenAddr) ERC4626(_asset) ERC20('USDe LOGHO Vault Token', 'vUSDe'){
-        ghoTreasury = _ghoTreasury;
+        // ghoTreasury = _ghoTreasury;
         USDe = ERC20(_USDe);
         redeemFee = _redeemFee;
         ghoToken = GhoToken(ghoTokenAddr);

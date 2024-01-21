@@ -4,7 +4,6 @@ pragma solidity 0.8.20;
 import {IGhoFacilitator} from "../gho/interfaces/IGhoFacilitator.sol";
 import {GhoToken} from "../gho/GhoToken.sol";
  import {LoGHOVault} from "./LoGHOVault.sol";
- import "forge-std/console.sol";
 
 contract LoGHOFacilitator is IGhoFacilitator {
     address public ghoTreasury;
@@ -14,6 +13,13 @@ contract LoGHOFacilitator is IGhoFacilitator {
     uint128 public bucketCapacity;
     uint256 public constant MAX_FEE = 1e4;
     uint256 public fee;
+
+
+    uint256 private constant _BASIS_POINT_SCALE = 1e4;
+
+    //loGho contracts
+    LoGHOFacilitator private facilitator;
+    
 
     constructor(address _ghoToken, address _vault, address _ghoTreasury, uint128 _bucketCapacity, uint256 _fee, string memory _label) {
         fee = _fee;

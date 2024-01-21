@@ -3,24 +3,21 @@ pragma solidity 0.8.20;
 
 import "ds-test/test.sol";
 import "forge-std/Test.sol";
-import {LoGHOVault} from "../src/logho/LoGHOVault.sol";
-import {LoGHOFacilitator} from "../src/logho/LoGHOFacilitator.sol"; 
 import {GhoToken} from "../src/gho/GhoToken.sol"; 
 import {MockERC20} from "../src/MockERC20.sol";
+import {LoGHOFacilitatorVault} from "../src/logho/LoGHOFacilitatorVault.sol";
 
-
-contract LoGHOFacilitatorTest is Test {
-    LoGHOFacilitator facilitator;
+contract LoGHOFacilitatorVaultTest is Test {
+    LoGHOFacilitatorVault facilitatorVault;
     GhoToken ghoToken;
-    LoGHOVault vault;
     MockERC20 usde;
     address ghoTreasury = address(0x1);
     address admin = address(0x2);
     address user1 = address(0x3);
     address user2 = address(0x4);
-    address facilitatorAddress;
-    address vaultAddress;
     uint256 redemptionFee = 50;
+    uint128 bucketCapacity = 10000000000;
+    address facilitatorVaultAddr;
 
     function setUp() public {
         ghoToken = new GhoToken(admin);
@@ -29,33 +26,24 @@ contract LoGHOFacilitatorTest is Test {
         usde = new MockERC20("USDe", "USDe");
         address usdeAddress = address(usde);
 
+        facilitatorVault = new LoGHOFacilitatorVault
+        (ghoTokenAddress, ghoTreasury,bucketCapacity,"test facilitater",usdeAddress, redemptionFee);
 
-        //     constructor(IERC20 _asset,
-        // address _ghoTreasury,
-        // address _USDe,
-        // uint256 _redeemFee,
-        // address ghoTokenAddr)
-
-        vault = new LoGHOVault(usde, ghoTreasury, usdeAddress,redemptionFee,ghoTokenAddress);
-        vaultAddress = address(vault);
-
-        uint128 bucketCapacity = 1000;
-
-        facilitator = new LoGHOFacilitator(ghoTokenAddress, vaultAddress, ghoTreasury, bucketCapacity, redemptionFee, "LoGHO Facilitator");
-        facilitatorAddress = address(facilitator);
-        vault.setFacilitator(facilitatorAddress);
+        facilitatorVaultAddr = address(facilitatorVault);
 
         vm.startPrank(admin);
-        ghoToken.addFacilitator(facilitatorAddress, facilitator.label(),10000);
+        ghoToken.addFacilitator(facilitatorVaultAddr, facilitatorVault.label(),bucketCapacity);
     }
 
     function testSetup() public {
-        //'Gho Token', 'GHO'
         assertEq(usde.name(), "USDe");
         assertEq(usde.symbol(), "USDe");
 
         assertEq(ghoToken.name(), "Gho Token");
         assertEq(ghoToken.symbol(), "GHO");
+
+        assertEq(facilitatorVault.name(), "USDe LOGHO Vault Token");
+        assertEq(facilitatorVault.symbol(), "vUSDe");
     }
 
     function testUSDeMint() public {
@@ -65,7 +53,7 @@ contract LoGHOFacilitatorTest is Test {
     }
 
     function testGHOMint() public {
-        vm.startPrank(facilitatorAddress);
+        vm.startPrank(facilitatorVaultAddr);
         ghoToken.mint(user1, 100);
         assertEq(ghoToken.balanceOf(user1),100);
     }
@@ -75,20 +63,20 @@ contract LoGHOFacilitatorTest is Test {
         usde.mint(user1, 100);
         assertEq(usde.balanceOf(user1),100);
 
-        usde.approve(address(vault), 100);
+        usde.approve(facilitatorVaultAddr, 100);
 
-        uint256 initialShares = vault.balanceOf(user1);
+        uint256 initialShares = facilitatorVault.balanceOf(user1);
 
-        vault.depositUSDe(100);
+        facilitatorVault.depositUSDe(100);
 
         assertEq(ghoToken.balanceOf(user1), 100);
         assertEq(usde.balanceOf(user1),0);
-        assertEq(usde.balanceOf(vaultAddress),100);
-        assertEq(vault.balanceOf(user1),100);
-        assertEq(vault.totalSupply(),100);
+        assertEq(usde.balanceOf(facilitatorVaultAddr),100);
+        assertEq(facilitatorVault.balanceOf(user1),100);
+        assertEq(facilitatorVault.totalSupply(),100);
         
-        uint256 expectedShares = vault.convertToShares(100); // Assuming such a function exists
-        uint256 finalShares = vault.balanceOf(user1);
+        uint256 expectedShares = facilitatorVault.convertToShares(100); // Assuming such a function exists
+        uint256 finalShares = facilitatorVault.balanceOf(user1);
 
         assertEq(finalShares - initialShares, expectedShares);
 
@@ -104,16 +92,18 @@ contract LoGHOFacilitatorTest is Test {
         usde.mint(user1, 100);
 
         // And user1 deposits 100 USDe
-        usde.approve(address(vault), 100);
-        vault.depositUSDe(100);
+        usde.approve(facilitatorVaultAddr, 100);
+        facilitatorVault.depositUSDe(100);
+        
         assertEq(ghoToken.balanceOf(user1), 100);
+        assertEq(usde.balanceOf(facilitatorVaultAddr),100);
+        assertEq(usde.balanceOf(user1),0);
 
         // When user1 redeems shares
-        vault.redeemUsde(100, user1);
+        facilitatorVault.redeemUsde(100, user1);
         
         // Then user1 has 99.5 USDe (considering a 0.5% redemption fee)
-        uint256 redemptionFee = 50; // 0.5% of 100
-        uint256 expectedBalance = 10000 - redemptionFee;
+        // uint256 expectedBalance = 10000 - redemptionFee;
         // assertEq(usde.balanceOf(user1), expectedBalance * 10 ** usde.decimals());
         assertGt(usde.balanceOf(ghoTreasury), 0);
 
