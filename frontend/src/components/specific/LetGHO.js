@@ -5,6 +5,9 @@ import GBPeLogo from "../../assets/svg/GBPe.svg";
 import USDCLogo from "../../assets/svg/USDC.svg";
 import USDTLogo from "../../assets/svg/USDT.svg";
 import GHOLogo from "../../assets/svg/GHO_Token.svg";
+import { ethers } from "ethers";
+import GHOData from "../../assets/abi/GHO.json";
+import { useAccount } from "wagmi";
 
 const LetGHO = () => {
   const [amount, setAmount] = useState(0);
@@ -12,6 +15,28 @@ const LetGHO = () => {
   const [GHOBalance, setGHOBalance] = useState(0);
   const [selectedToken, setSelectedToken] = useState("USDe");
   const [selectedTokenExchangeRate, setSelectedTokenExchangeRate] = useState(0);
+  const { address } = useAccount();
+
+
+  const fetchGHOBalance = async () => {
+    if (!address) return;
+    const GHOAddress = "0x6e8b5606658D1Dc4780ba7043D7FC7957e155f95";
+    const GHOABI = JSON.parse(GHOData.result);
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const contract = new ethers.Contract(GHOAddress, GHOABI, provider);
+
+    try {
+      const GHOBalance = await contract.balanceOf(address);
+      setGHOBalance(ethers.utils.formatEther(GHOBalance));
+    } catch (error) {
+      console.error("Error fetching token balance:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchGHOBalance();
+  }, [address]);
 
   const selectedTokenLogo = () => {
     switch (selectedToken) {

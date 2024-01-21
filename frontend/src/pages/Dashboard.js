@@ -5,6 +5,7 @@ import USDeData from "../assets/abi/USDe.json";
 import EUReData from "../assets/abi/EURe.json";
 import GBPeData from "../assets/abi/GBPe.json";
 import USDCData from "../assets/abi/USDC.json";
+import GHOData from "../assets/abi/GHO.json";
 import GetGHO from "../components/specific/GetGHO";
 import LetGHO from "../components/specific/LetGHO";
 import Wallet from "../assets/images/wallet.png";
@@ -18,7 +19,6 @@ import USDT from "../assets/svg/USDT.svg";
 import GHO from "../assets/svg/GHO_Token.svg";
 import InfoButton from "../components/specific/HoverInfo";
 import { Monerium } from "../components/specific/Monerium.tsx";
-import OffRamp from "../components/specific/OffRamp";
 
 const Dashboard = () => {
   const { address } = useAccount();
@@ -119,7 +119,8 @@ const Dashboard = () => {
       Number(USDeBalance) +
       Number(EUReBalance) * Number(EUReExchangeRate) +
       Number(GBPeBalance) * Number(GBPeExchangeRate) +
-      Number(USDCBalance); /*+ Number(GHOBalance) + Number(USDTBalance)*/
+      Number(USDCBalance) +
+      Number(GHOBalance); /*+ Number(USDTBalance)*/
     setTotalBalance(totalBalance);
   };
 
@@ -127,13 +128,33 @@ const Dashboard = () => {
     calculateTotalBalance();
   }, [USDeBalance, EUReBalance, GBPeBalance, USDCBalance]);
 
+  const fetchGHOBalance = async () => {
+    if (!address) return;
+    const GHOAddress = "0x6e8b5606658D1Dc4780ba7043D7FC7957e155f95";
+    const GHOABI = JSON.parse(GHOData.result);
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const contract = new ethers.Contract(GHOAddress, GHOABI, provider);
+
+    try {
+      const GHOBalance = await contract.balanceOf(address);
+      setGHOBalance(ethers.utils.formatEther(GHOBalance));
+    } catch (error) {
+      console.error("Error fetching token balance:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchGHOBalance();
+  }, [address]);
+
   const fetchExchangeRate = async () => {
     const url = `https://api.forexrateapi.com/v1/latest?api_key=${process.env.REACT_APP_FOREX_RATE_API_KEY}&base=USD&currencies=EUR,GBP`;
     //const url = `https://api.exchangeratesapi.io/latest?base=USD&symbols=EUR,GBP`;
     const response = await fetch(url);
     const data = await response.json();
-    setEUReExchangeRate(Number(1/data.rates.EUR));
-    setGBPeExchangeRate(Number(1/data.rates.GBP));
+    setEUReExchangeRate(Number(1 / data.rates.EUR));
+    setGBPeExchangeRate(Number(1 / data.rates.GBP));
   };
 
   useEffect(() => {
@@ -331,7 +352,7 @@ const Dashboard = () => {
                       <img src={GHO} alt="GHO" className="w-10 h-10" />
                       GHO
                     </a>
-                    <p>500</p>
+                    <p>{GHOBalance}</p>
                     <p>Redeem</p>
                   </div>
                 </li>
