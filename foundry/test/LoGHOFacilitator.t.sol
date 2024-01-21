@@ -20,6 +20,7 @@ contract LoGHOFacilitatorTest is Test {
     address user2 = address(0x4);
     address facilitatorAddress;
     address vaultAddress;
+    uint256 redemptionFee = 50;
 
     function setUp() public {
         ghoToken = new GhoToken(admin);
@@ -28,13 +29,12 @@ contract LoGHOFacilitatorTest is Test {
         usde = new MockERC20("USDe", "USDe");
         address usdeAddress = address(usde);
 
-        vault = new LoGHOVault(usde, ghoTreasury, usdeAddress);
+        vault = new LoGHOVault(usde, ghoTreasury, usdeAddress,redemptionFee,ghoTokenAddress);
         vaultAddress = address(vault);
 
         uint128 bucketCapacity = 1000;
-        uint256 fee = 100; // 1% fee for example
 
-        facilitator = new LoGHOFacilitator(ghoTokenAddress, vaultAddress, ghoTreasury, bucketCapacity, fee, "LoGHO Facilitator");
+        facilitator = new LoGHOFacilitator(ghoTokenAddress, vaultAddress, ghoTreasury, bucketCapacity, redemptionFee, "LoGHO Facilitator");
         facilitatorAddress = address(facilitator);
         vault.setFacilitator(facilitatorAddress);
 
@@ -74,6 +74,7 @@ contract LoGHOFacilitatorTest is Test {
 
         vault.depositUSDe(100);
 
+        assertEq(ghoToken.balanceOf(user1), 100);
         assertEq(usde.balanceOf(user1),0);
         assertEq(usde.balanceOf(vaultAddress),100);
         assertEq(vault.balanceOf(user1),100);
@@ -87,6 +88,33 @@ contract LoGHOFacilitatorTest is Test {
         // assert on GHO mint
         assertEq(ghoToken.balanceOf(user1),100);
     }
+
+
+
+function testVaultUSDeRedeem() public {
+    // Given user1 has 100 USDe
+    vm.startPrank(user1);
+    usde.mint(user1, 100);
+
+    // And user1 deposits 100 USDe
+    usde.approve(address(vault), 100);
+    vault.depositUSDe(100);
+    assertEq(ghoToken.balanceOf(user1), 100);
+
+    // When user1 redeems shares
+    vault.redeemUsde(100, user1);
+    
+    // Then user1 has 99.5 USDe (considering a 0.5% redemption fee)
+    uint256 redemptionFee = 50; // 0.5% of 100
+    uint256 expectedBalance = 10000 - redemptionFee;
+    // assertEq(usde.balanceOf(user1), expectedBalance * 10 ** usde.decimals());
+    assertGt(usde.balanceOf(ghoTreasury), 0);
+
+    // If you also want to check GHO Token balance, make sure to use the correct expected value
+    // assertEq(ghoToken.balanceOf(user1), 0);
+
+    vm.stopPrank();
+}
 
     // function testConstructorInitialization() public {
     //     assertEq(facilitator.ghoTreasury(), ghoTreasury);

@@ -30,9 +30,6 @@ contract GhoToken is ERC20, AccessControl, IGhoToken {
   constructor(address admin) ERC20('Gho Token', 'GHO', 18) {
     bool granted = _grantRole(DEFAULT_ADMIN_ROLE, admin);
     bool grantedManager = _grantRole(FACILITATOR_MANAGER_ROLE, admin);
-    
-    console.log("-----------> %s , granted: %s", admin, granted);
-    // getRoleAdmin(FACILITATOR_MANAGER_ROLE);
   }
 
   /// @inheritdoc IGhoToken
@@ -70,9 +67,6 @@ contract GhoToken is ERC20, AccessControl, IGhoToken {
     string calldata facilitatorLabel,
     uint128 bucketCapacity
   ) external onlyRole(FACILITATOR_MANAGER_ROLE) {
-
-    console.log("------> sender: %s", msg.sender); 
-
     Facilitator storage facilitator = _facilitators[facilitatorAddress];
     require(bytes(facilitator.label).length == 0, 'FACILITATOR_ALREADY_EXISTS');
     require(bytes(facilitatorLabel).length > 0, 'INVALID_LABEL');
