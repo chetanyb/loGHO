@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { MoneriumClient } from '@monerium/sdk';
-import { providers } from 'ethers';
+import { MoneriumClient, placeOrderMessage } from '@monerium/sdk';
+import OffRamp from './OffRamp';
 
-// Assuming the type of AuthContext is defined elsewhere
+
 interface AuthContext {
   name: string;
   email: string;
@@ -17,7 +17,7 @@ export function Monerium() {
     const sdk = new MoneriumClient({
       environment: 'sandbox',
       clientId: process.env.REACT_APP_MONERIUM_CLIENT_ID || '',
-      redirectUrl: 'http://localhost:3000/',
+      redirectUrl: 'http://localhost:3000/dashboard',
     });
     setMonerium(sdk);
   }, []);
@@ -36,7 +36,7 @@ export function Monerium() {
         monerium.disconnect();
       }
     };
-  }, [monerium]);
+  }, [monerium]);    
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,8 +53,10 @@ export function Monerium() {
 
   return (
     <div>
-      {!isAuthorized && <button onClick={() => monerium?.authorize()}>Connect</button>}
-
+      {!isAuthorized && <button className="btn bg-gho-dark-bg w-20" onClick={(e) => {
+            e.preventDefault();
+            monerium?.authorize();
+          }}>Connect</button>}
       <p>{authCtx?.name || authCtx?.email}</p>
     </div>
   );

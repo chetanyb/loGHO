@@ -5,7 +5,8 @@ import USDeData from "../assets/abi/USDe.json";
 import EUReData from "../assets/abi/EURe.json";
 import GBPeData from "../assets/abi/GBPe.json";
 import USDCData from "../assets/abi/USDC.json";
-import GetGHO from "./GetGHO";
+import GetGHO from "../components/specific/GetGHO";
+import LetGHO from "../components/specific/LetGHO";
 import Wallet from "../assets/images/wallet.png";
 import Bar from "../assets/images/bar-chart.png";
 import Fee from "../assets/images/fee.png";
@@ -15,6 +16,9 @@ import GBPe from "../assets/svg/GBPe.svg";
 import USDC from "../assets/svg/USDC.svg";
 import USDT from "../assets/svg/USDT.svg";
 import GHO from "../assets/svg/GHO_Token.svg";
+import InfoButton from "../components/specific/HoverInfo";
+import { Monerium } from "../components/specific/Monerium.tsx";
+import OffRamp from "../components/specific/OffRamp";
 
 const Dashboard = () => {
   const { address } = useAccount();
@@ -124,12 +128,12 @@ const Dashboard = () => {
   }, [USDeBalance, EUReBalance, GBPeBalance, USDCBalance]);
 
   const fetchExchangeRate = async () => {
-    //const url = `https://api.forexrateapi.com/v1/latest?api_key=${process.env.REACT_APP_FOREX_RATE_API_KEY}&base=USD&currencies=EUR,GBP`;
-    const url = `https://api.exchangeratesapi.io/latest?base=USD&symbols=EUR,GBP`;
+    const url = `https://api.forexrateapi.com/v1/latest?api_key=${process.env.REACT_APP_FOREX_RATE_API_KEY}&base=USD&currencies=EUR,GBP`;
+    //const url = `https://api.exchangeratesapi.io/latest?base=USD&symbols=EUR,GBP`;
     const response = await fetch(url);
     const data = await response.json();
-    //setEUReExchangeRate(Number(1/data.rates.EUR));
-    //setGBPeExchangeRate(Number(1/data.rates.GBP));
+    setEUReExchangeRate(Number(1/data.rates.EUR));
+    setGBPeExchangeRate(Number(1/data.rates.GBP));
   };
 
   useEffect(() => {
@@ -138,13 +142,23 @@ const Dashboard = () => {
 
   return (
     <div>
-      <dialog
-        id="deposit_modal"
-        className="modal sm:w-1/2 md:w-1/3 lg:w-1/2 flex items-center justify-center"
-      >
+      <dialog id="deposit_modal" className="modal">
         <div className="modal-box bg-white w-screen rounded-md shadow-md">
           <form method="dialog">
             <GetGHO
+              selectedToken={selectedToken}
+              setSelectedToken={setSelectedToken}
+            />
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+              ✕
+            </button>
+          </form>
+        </div>
+      </dialog>
+      <dialog id="redeem_modal" className="modal">
+        <div className="modal-box bg-white w-screen rounded-md shadow-md">
+          <form method="dialog">
+            <LetGHO
               selectedToken={selectedToken}
               setSelectedToken={setSelectedToken}
             />
@@ -188,7 +202,12 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="flex flex-col justify-between ml-4">
-              <p className="text-slate-200 font-uni-neue-light text-sm">Fees</p>
+              <div className="flex items-center">
+                <p className="text-slate-200 font-uni-neue-light text-sm">
+                  Fees
+                </p>
+                <InfoButton />
+              </div>
               <p className="text-slate-200 text-xl">{0.5}% Exit load</p>
             </div>
           </div>
@@ -210,6 +229,7 @@ const Dashboard = () => {
                   className="border-t border-slate-500"
                   onClick={() => {
                     setSelectedToken("USDe");
+
                     document.getElementById("deposit_modal").showModal();
                   }}
                 >
@@ -288,7 +308,7 @@ const Dashboard = () => {
               </ul>
             </div>
           </div>
-          <div className="flex w-1/2 justify-center border border-slate-500">
+          <div className="flex w-1/2 border border-slate-500">
             <div className=" bg-gho-light-bg w-full pt-2">
               <b className=" text-gho-dark-bg font-light text-lg px-5">
                 Redeem
@@ -298,9 +318,15 @@ const Dashboard = () => {
                 <li>Balance</li>
                 <li>Actions</li>
               </ul>
-              <ul className="menu w-full bg-gho-dark-primary rounded-none pt-2 text-slate-700">
-                <li className="border-t border-b border-slate-500">
-                  <div className="flex justify-between">
+              <ul className="menu w-full rounded-none pt-2 text-slate-700">
+                <li
+                  className="border-t border-slate-500"
+                  onClick={() => {
+                    setSelectedToken("USDC");
+                    document.getElementById("redeem_modal").showModal();
+                  }}
+                >
+                  <div className="flex justify-between bg-gho-dark-primary rounded-none">
                     <a className="flex items-center">
                       <img src={GHO} alt="GHO" className="w-10 h-10" />
                       GHO
@@ -309,9 +335,132 @@ const Dashboard = () => {
                     <p>Redeem</p>
                   </div>
                 </li>
+                <li
+                  className="border-t border-b border-slate-500"
+                  onClick={() => {
+                    setSelectedToken("USDC");
+                    document.getElementById("redeem_modal").showModal();
+                  }}
+                >
+                  <div className="flex justify-between rounded-none">
+                    <a className="flex items-center">
+                      <img src={USDe} alt="vUSDe" className="w-10 h-10" />
+                      vUSDe
+                    </a>
+                    <p>500</p>
+                    <p>Redeem</p>
+                  </div>
+                </li>
+                <li
+                  className="border-t border-b border-slate-500"
+                  onClick={() => {
+                    setSelectedToken("USDC");
+                    document.getElementById("redeem_modal").showModal();
+                  }}
+                >
+                  <div className="flex justify-between rounded-none">
+                    <a className="flex items-center">
+                      <img src={EURe} alt="vEURe" className="w-10 h-10" />
+                      vEURe
+                    </a>
+                    <p>500</p>
+                    <p>Redeem</p>
+                  </div>
+                </li>
+                <li
+                  className="border-t border-b border-slate-500"
+                  onClick={() => {
+                    setSelectedToken("USDC");
+                    document.getElementById("redeem_modal").showModal();
+                  }}
+                >
+                  <div className="flex justify-between rounded-none">
+                    <a className="flex items-center">
+                      <img src={GBPe} alt="vGBPe" className="w-10 h-10" />
+                      vGBPe
+                    </a>
+                    <p>500</p>
+                    <p>Redeem</p>
+                  </div>
+                </li>
+                <li
+                  className="border-t border-b border-slate-500"
+                  onClick={() => {
+                    setSelectedToken("USDC");
+                    document.getElementById("redeem_modal").showModal();
+                  }}
+                >
+                  <div className="flex justify-between rounded-none">
+                    <a className="flex items-center">
+                      <img src={USDC} alt="vUSDC" className="w-10 h-10" />
+                      vUSDC
+                    </a>
+                    <p>500</p>
+                    <p>Redeem</p>
+                  </div>
+                </li>
               </ul>
             </div>
           </div>
+        </div>
+        <div className=" bg-gho-light-bg w-full pt-2 border-2 border-gho-dark-bg">
+          <b className=" text-gho-dark-bg font-light text-lg px-5">Off-ramp</b>
+          <ul className="px-5 flex justify-between border-t text-slate-500">
+            <li>Asset</li>
+            <li>Balance</li>
+            <li>Actions</li>
+          </ul>
+          <ul className="menu w-full rounded-none pt-2 text-slate-700">
+            <li
+              className="border-t border-slate-500"
+              onClick={() => {
+                setSelectedToken("USDe");
+
+                document.getElementById("deposit_modal").showModal();
+              }}
+            >
+              <div className="justify-between">
+                <a className="flex items-center">
+                  <img src={USDe} alt="USDe" className="w-10 h-10 mr-2" />
+                  USDe
+                </a>
+                <p>{Number(USDeBalance).toFixed(2)}</p>
+                <p>Off-ramp</p>
+              </div>
+            </li>
+            <li
+              className="border-t border-slate-500"
+              onClick={() => {
+                setSelectedToken("EURe");
+                document.getElementById("deposit_modal").showModal();
+              }}
+            >
+              <div className="justify-between">
+                <a className=" flex items-center">
+                  <img src={EURe} alt="EURr" className="w-10 h-10 mr-2" />
+                  EURe
+                </a>
+                <p>{Number(EUReBalance).toFixed(2)}</p>
+                <p>Off-ramp</p>
+              </div>
+            </li>
+            <li
+              className="border-t border-slate-500"
+              onClick={() => {
+                setSelectedToken("GBPe");
+                document.getElementById("deposit_modal").showModal();
+              }}
+            >
+              <div className="justify-between">
+                <a className=" flex items-center">
+                  <img src={GBPe} alt="GBPe" className="w-10 h-10 mr-2" />
+                  GBPe
+                </a>
+                <p>{Number(GBPeBalance).toFixed(2)}</p>
+                <p>Off-ramp</p>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </div>

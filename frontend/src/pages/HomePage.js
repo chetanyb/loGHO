@@ -6,7 +6,7 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
-    navigate("/getgho");
+    navigate("/dashboard");
   };
 
   return (
