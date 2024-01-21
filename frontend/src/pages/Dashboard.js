@@ -5,6 +5,7 @@ import USDeData from "../assets/abi/USDe.json";
 import EUReData from "../assets/abi/EURe.json";
 import GBPeData from "../assets/abi/GBPe.json";
 import USDCData from "../assets/abi/USDC.json";
+import GetGHO from "./GetGHO";
 import Wallet from "../assets/images/wallet.png";
 import Bar from "../assets/images/bar-chart.png";
 import Fee from "../assets/images/fee.png";
@@ -121,20 +122,34 @@ const Dashboard = () => {
     calculateTotalBalance();
   }, [USDeBalance, EUReBalance, GBPeBalance, USDCBalance]);
 
-  const fetExchangeRate = async () => {
-    const url = `https://api.forexrateapi.com/v1/latest?api_key=${process.env.REACT_APP_FOREX_RATE_API_KEY}&base=USD&currencies=EUR,GBP`;
+  const fetchExchangeRate = async () => {
+    //const url = `https://api.forexrateapi.com/v1/latest?api_key=${process.env.REACT_APP_FOREX_RATE_API_KEY}&base=USD&currencies=EUR,GBP`;
+    const url = `https://api.exchangeratesapi.io/latest?base=USD&symbols=EUR,GBP`;
     const response = await fetch(url);
     const data = await response.json();
-    setEUReExchangeRate(Number(1/data.rates.EUR));
-    setGBPeExchangeRate(Number(1/data.rates.GBP));
+    //setEUReExchangeRate(Number(1/data.rates.EUR));
+    //setGBPeExchangeRate(Number(1/data.rates.GBP));
   };
 
   useEffect(() => {
-    fetExchangeRate();
+    fetchExchangeRate();
   }, []);
 
   return (
     <div>
+      <dialog
+        id="deposit_modal"
+        className="modal sm:w-1/2 md:w-1/3 lg:w-1/2 flex items-center justify-center"
+      >
+        <div className="modal-box bg-white w-screen rounded-md shadow-md">
+          <form method="dialog">
+            <GetGHO />
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+              ✕
+            </button>
+          </form>
+        </div>
+      </dialog>
       <div className="flex flex-col">
         <div className="w-full bg-gho-dark-bg">
           <h1 className="mx-60 pb-4 pt-10 text-2xl text-start font-uni-neue-heavy text-slate-200">
@@ -182,12 +197,17 @@ const Dashboard = () => {
               </b>
               <ul className="px-5 flex justify-between border-t text-slate-500">
                 <li>Asset</li>
-                <li className="ml-24">Balance</li>
+                <li className="ml-20">Balance</li>
                 <li>Exchange Rate</li>
                 <li>Actions</li>
               </ul>
               <ul className="menu w-full rounded-none text-slate-700 px-5">
-                <li className="border-t border-slate-500">
+                <li
+                  className="border-t border-slate-500"
+                  onClick={() =>
+                    document.getElementById("deposit_modal").showModal()
+                  }
+                >
                   <div className="justify-between">
                     <a className="flex items-center">
                       <img src={USDe} alt="USDe" className="w-10 h-10 mr-2" />
@@ -198,7 +218,12 @@ const Dashboard = () => {
                     <p>Deposit</p>
                   </div>
                 </li>
-                <li className="border-t border-slate-500">
+                <li
+                  className="border-t border-slate-500"
+                  onClick={() =>
+                    document.getElementById("deposit_modal").showModal()
+                  }
+                >
                   <div className="justify-between">
                     <a className=" flex items-center">
                       <img src={EURe} alt="EURr" className="w-10 h-10 mr-2" />
@@ -209,7 +234,12 @@ const Dashboard = () => {
                     <p>Deposit</p>
                   </div>
                 </li>
-                <li className="border-t border-slate-500">
+                <li
+                  className="border-t border-slate-500"
+                  onClick={() =>
+                    document.getElementById("deposit_modal").showModal()
+                  }
+                >
                   <div className="justify-between">
                     <a className=" flex items-center">
                       <img src={GBPe} alt="GBPe" className="w-10 h-10 mr-2" />
@@ -220,7 +250,12 @@ const Dashboard = () => {
                     <p>Deposit</p>
                   </div>
                 </li>
-                <li className="border-t border-slate-500">
+                <li
+                  className="border-t border-slate-500"
+                  onClick={() =>
+                    document.getElementById("deposit_modal").showModal()
+                  }
+                >
                   <div className="justify-between">
                     <a className=" flex items-center">
                       <img src={USDC} alt="USDC" className="w-10 h-10 mr-2" />

@@ -11,7 +11,7 @@ function App() {
   return (
     <WagmiConfig config={config}>
       <Router>
-        <div className="App">
+        <div className="Appt">
           <Header />
           <Routes>
             <Route path="/" element={<HomePage />} />
