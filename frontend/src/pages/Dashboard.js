@@ -219,6 +219,17 @@ const Dashboard = () => {
             </div>
             <div className="flex flex-col justify-between ml-10">
               <div className="rounded-xl border border-slate-400 w-11 h-11 bg-gho-light-primary flex items-center justify-center">
+                <img src={GHO} alt="gho-balance" className="w-7 h-7" />
+              </div>
+            </div>
+            <div className="flex flex-col justify-between ml-4">
+              <p className="text-slate-200 font-uni-neue-light text-sm">
+                GHO Balance
+              </p>
+              <p className="text-slate-200 text-xl">{GHOBalance}</p>
+            </div>
+            <div className="flex flex-col justify-between ml-10">
+              <div className="rounded-xl border border-slate-400 w-11 h-11 bg-gho-light-primary flex items-center justify-center">
                 <img src={Fee} alt="fee-hand" className="w-7 h-7" />
               </div>
             </div>
@@ -340,22 +351,6 @@ const Dashboard = () => {
                 <li>Actions</li>
               </ul>
               <ul className="menu w-full rounded-none pt-2 text-slate-700">
-                <li
-                  className="border-t border-slate-500"
-                  onClick={() => {
-                    setSelectedToken("USDC");
-                    document.getElementById("redeem_modal").showModal();
-                  }}
-                >
-                  <div className="flex justify-between bg-gho-dark-primary rounded-none">
-                    <a className="flex items-center">
-                      <img src={GHO} alt="GHO" className="w-10 h-10" />
-                      GHO
-                    </a>
-                    <p>{GHOBalance}</p>
-                    <p>Redeem</p>
-                  </div>
-                </li>
                 <li
                   className="border-t border-b border-slate-500"
                   onClick={() => {
