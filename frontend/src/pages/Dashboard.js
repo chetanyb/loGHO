@@ -28,6 +28,7 @@ const Dashboard = () => {
   const [totalBalance, setTotalBalance] = useState(0);
   const [EUReExchangeRate, setEUReExchangeRate] = useState(0);
   const [GBPeExchangeRate, setGBPeExchangeRate] = useState(0);
+  const [selectedToken, setSelectedToken] = useState("USDe");
 
   const fetchUSDeBalance = async () => {
     if (!address) return;
@@ -143,7 +144,10 @@ const Dashboard = () => {
       >
         <div className="modal-box bg-white w-screen rounded-md shadow-md">
           <form method="dialog">
-            <GetGHO />
+            <GetGHO
+              selectedToken={selectedToken}
+              setSelectedToken={setSelectedToken}
+            />
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
               ✕
             </button>
@@ -204,9 +208,10 @@ const Dashboard = () => {
               <ul className="menu w-full rounded-none text-slate-700 px-5">
                 <li
                   className="border-t border-slate-500"
-                  onClick={() =>
-                    document.getElementById("deposit_modal").showModal()
-                  }
+                  onClick={() => {
+                    setSelectedToken("USDe");
+                    document.getElementById("deposit_modal").showModal();
+                  }}
                 >
                   <div className="justify-between">
                     <a className="flex items-center">
@@ -220,9 +225,10 @@ const Dashboard = () => {
                 </li>
                 <li
                   className="border-t border-slate-500"
-                  onClick={() =>
-                    document.getElementById("deposit_modal").showModal()
-                  }
+                  onClick={() => {
+                    setSelectedToken("EURe");
+                    document.getElementById("deposit_modal").showModal();
+                  }}
                 >
                   <div className="justify-between">
                     <a className=" flex items-center">
@@ -236,9 +242,10 @@ const Dashboard = () => {
                 </li>
                 <li
                   className="border-t border-slate-500"
-                  onClick={() =>
-                    document.getElementById("deposit_modal").showModal()
-                  }
+                  onClick={() => {
+                    setSelectedToken("GBPe");
+                    document.getElementById("deposit_modal").showModal();
+                  }}
                 >
                   <div className="justify-between">
                     <a className=" flex items-center">
@@ -252,9 +259,10 @@ const Dashboard = () => {
                 </li>
                 <li
                   className="border-t border-slate-500"
-                  onClick={() =>
-                    document.getElementById("deposit_modal").showModal()
-                  }
+                  onClick={() => {
+                    setSelectedToken("USDC");
+                    document.getElementById("deposit_modal").showModal();
+                  }}
                 >
                   <div className="justify-between">
                     <a className=" flex items-center">

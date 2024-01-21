@@ -11,9 +11,8 @@ import GBPeLogo from "../assets/svg/GBPe.svg";
 import USDCLogo from "../assets/svg/USDC.svg";
 import USDTLogo from "../assets/svg/USDT.svg";
 
-const GetGHO = () => {
+const GetGHO = ({ selectedToken, setSelectedToken }) => {
   const [amount, setAmount] = useState("");
-  const [selectedToken, setSelectedToken] = useState("USDe");
   const [tokenBalance, setTokenBalance] = useState(0);
   const [selectedTokenExchangeRate, setSelectedTokenExchangeRate] = useState(0);
   const { address } = useAccount();
@@ -132,23 +131,30 @@ const GetGHO = () => {
           <h1 className="text-xl font-extrabold text-black">Borrow GHO</h1>
           <select
             className="select select-accent w-full bg-white text-slate-700"
+            value={selectedToken}
             onChange={(e) => {
               setSelectedToken(e.target.value);
               setTokenBalance(0);
             }}
           >
-            <option
-              disabled
-              selected
-              className="bg-gho-light-bg text-slate-700"
-            >
+            <option disabled className="bg-gho-light-bg text-slate-700">
               Select deposit asset
             </option>
-            <option className="bg-gho-light-bg">USDe</option>
-            <option className="bg-gho-light-bg">EURe</option>
-            <option className="bg-gho-light-bg">GBPe</option>
-            <option className="bg-gho-light-bg">USDC</option>
-            <option className="bg-gho-light-bg">USDT</option>
+            <option value="USDe" className="bg-gho-light-bg">
+              USDe
+            </option>
+            <option value="EURe" className="bg-gho-light-bg">
+              EURe
+            </option>
+            <option value="GBPe" className="bg-gho-light-bg">
+              GBPe
+            </option>
+            <option value="USDC" className="bg-gho-light-bg">
+              USDC
+            </option>
+            <option value="USDT" className="bg-gho-light-bg">
+              USDT
+            </option>
           </select>
           <label
             htmlFor="amount"
