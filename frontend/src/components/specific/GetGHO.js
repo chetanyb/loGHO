@@ -219,7 +219,7 @@ const GetGHO = ({ selectedToken, setSelectedToken }) => {
               <div className="flex items-center">
                 You will receive:{" "}
                 <img src={GHOLogo} alt="GHO Logo" className="h-5 w-5 mr-1" />
-                {amount * selectedTokenExchangeRate} GHO
+                {amount} GHO
               </div>
               Exchange rate: {selectedTokenExchangeRate}
               <br />

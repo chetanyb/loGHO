@@ -18,7 +18,6 @@ import USDC from "../assets/svg/USDC.svg";
 import USDT from "../assets/svg/USDT.svg";
 import GHO from "../assets/svg/GHO_Token.svg";
 import InfoButton from "../components/specific/HoverInfo";
-import { Monerium } from "../components/specific/Monerium.tsx";
 
 const Dashboard = () => {
   const { address } = useAccount();
@@ -114,7 +113,7 @@ const Dashboard = () => {
     fetchUSDCBalance();
   }, [address]);
 
-  const calculateTotalBalance = () => {
+  const calculateTotalBalance = async () => {
     const totalBalance =
       Number(USDeBalance) +
       Number(EUReBalance) * Number(EUReExchangeRate) +
@@ -126,7 +125,14 @@ const Dashboard = () => {
 
   useEffect(() => {
     calculateTotalBalance();
-  }, [USDeBalance, EUReBalance, GBPeBalance, USDCBalance]);
+  }, [
+    USDeBalance,
+    EUReBalance,
+    GBPeBalance,
+    USDCBalance,
+    EUReExchangeRate,
+    GBPeExchangeRate,
+  ]);
 
   const fetchGHOBalance = async () => {
     if (!address) return;
@@ -352,7 +358,7 @@ const Dashboard = () => {
               </ul>
               <ul className="menu w-full rounded-none pt-2 text-slate-700">
                 <li
-                  className="border-t border-b border-slate-500"
+                  className="border-t border-slate-500"
                   onClick={() => {
                     setSelectedToken("USDC");
                     document.getElementById("redeem_modal").showModal();
@@ -363,12 +369,12 @@ const Dashboard = () => {
                       <img src={USDe} alt="vUSDe" className="w-10 h-10" />
                       vUSDe
                     </a>
-                    <p>500</p>
+                    <p>0</p>
                     <p>Redeem</p>
                   </div>
                 </li>
                 <li
-                  className="border-t border-b border-slate-500"
+                  className="border-t border-slate-500"
                   onClick={() => {
                     setSelectedToken("USDC");
                     document.getElementById("redeem_modal").showModal();
@@ -379,12 +385,12 @@ const Dashboard = () => {
                       <img src={EURe} alt="vEURe" className="w-10 h-10" />
                       vEURe
                     </a>
-                    <p>500</p>
+                    <p>0</p>
                     <p>Redeem</p>
                   </div>
                 </li>
                 <li
-                  className="border-t border-b border-slate-500"
+                  className="border-t border-slate-500"
                   onClick={() => {
                     setSelectedToken("USDC");
                     document.getElementById("redeem_modal").showModal();
@@ -395,7 +401,7 @@ const Dashboard = () => {
                       <img src={GBPe} alt="vGBPe" className="w-10 h-10" />
                       vGBPe
                     </a>
-                    <p>500</p>
+                    <p>0</p>
                     <p>Redeem</p>
                   </div>
                 </li>
@@ -411,7 +417,7 @@ const Dashboard = () => {
                       <img src={USDC} alt="vUSDC" className="w-10 h-10" />
                       vUSDC
                     </a>
-                    <p>500</p>
+                    <p>0</p>
                     <p>Redeem</p>
                   </div>
                 </li>
